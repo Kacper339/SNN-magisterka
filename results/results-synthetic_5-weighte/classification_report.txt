@@ -1,0 +1,11 @@
+              precision    recall  f1-score   support
+
+   accordion       0.75      0.82      0.78        11
+   airplanes       0.99      0.97      0.98       160
+       brain       0.67      0.70      0.68        20
+      camera       0.50      0.50      0.50        10
+    elephant       0.53      0.62      0.57        13
+
+    accuracy                           0.89       214
+   macro avg       0.69      0.72      0.70       214
+weighted avg       0.90      0.89      0.90       214

@@ -1,0 +1,10 @@
+✅ Checkpoint wczytany
+Epoka: 10
+Najlepsze Val Acc: 23.07%
+
+📊 Ostatnie metryki:
+Train Acc: 41.82%
+Val Acc:   22.34%
+Top-1:     18.57%
+Top-5:     25.89%
+Spike rate:0.0246

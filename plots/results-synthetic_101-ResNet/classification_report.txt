@@ -1,0 +1,113 @@
+Raport Klasyfikacji:
+                   precision    recall  f1-score   support
+
+BACKGROUND_Google       0.13      0.34      0.19        94
+       Faces_easy       0.97      0.67      0.79        87
+         Leopards       0.83      0.38      0.52        40
+       Motorbikes       0.98      0.32      0.48       160
+        accordion       1.00      1.00      1.00        11
+        airplanes       0.94      0.55      0.69       160
+           anchor       0.00      0.00      0.00         9
+              ant       0.00      0.00      0.00         9
+           barrel       0.11      0.10      0.11        10
+             bass       0.20      0.09      0.12        11
+           beaver       0.00      0.00      0.00        10
+        binocular       0.00      0.00      0.00         7
+           bonsai       0.31      0.46      0.37        26
+            brain       0.35      0.45      0.39        20
+     brontosaurus       0.05      0.22      0.08         9
+           buddha       0.23      0.47      0.31        17
+        butterfly       0.12      0.05      0.07        19
+           camera       0.00      0.00      0.00        10
+           cannon       0.25      0.11      0.15         9
+         car_side       0.94      0.64      0.76        25
+      ceiling_fan       0.00      0.00      0.00        10
+        cellphone       0.64      0.58      0.61        12
+            chair       0.17      0.31      0.22        13
+       chandelier       0.29      0.18      0.22        22
+      cougar_body       0.00      0.00      0.00        10
+      cougar_face       0.00      0.00      0.00        14
+             crab       0.50      0.07      0.12        15
+         crayfish       0.05      0.07      0.06        14
+        crocodile       0.40      0.20      0.27        10
+   crocodile_head       0.38      0.27      0.32        11
+              cup       0.10      0.08      0.09        12
+        dalmatian       0.36      0.57      0.44        14
+      dollar_bill       1.00      0.18      0.31        11
+          dolphin       1.00      0.23      0.38        13
+        dragonfly       0.00      0.00      0.00        14
+  electric_guitar       0.10      0.20      0.14        15
+         elephant       0.00      0.00      0.00        13
+              emu       0.33      0.18      0.24        11
+        euphonium       0.00      0.00      0.00        13
+             ewer       0.39      0.41      0.40        17
+            ferry       0.32      0.50      0.39        14
+         flamingo       0.06      0.14      0.09        14
+    flamingo_head       0.20      0.11      0.14         9
+         garfield       0.20      0.14      0.17         7
+          gerenuk       0.00      0.00      0.00         7
+       gramophone       0.00      0.00      0.00        11
+      grand_piano       0.00      0.00      0.00        20
+        hawksbill       0.56      0.25      0.34        20
+        headphone       0.15      0.44      0.23         9
+         hedgehog       0.44      0.36      0.40        11
+       helicopter       0.33      0.67      0.44        18
+             ibis       0.11      0.25      0.16        16
+     inline_skate       0.00      0.00      0.00         7
+      joshua_tree       0.33      0.69      0.45        13
+         kangaroo       0.11      0.06      0.07        18
+            ketch       0.28      0.57      0.38        23
+             lamp       0.08      0.23      0.12        13
+           laptop       0.62      0.47      0.53        17
+            llama       0.08      0.06      0.07        16
+          lobster       0.14      0.22      0.17         9
+            lotus       0.41      0.50      0.45        14
+         mandolin       0.00      0.00      0.00         9
+           mayfly       0.50      0.12      0.20         8
+          menorah       0.65      0.72      0.68        18
+        metronome       0.62      0.71      0.67         7
+          minaret       0.84      1.00      0.91        16
+         nautilus       0.50      0.09      0.15        11
+          octopus       0.00      0.00      0.00         7
+            okapi       0.00      0.00      0.00         8
+           pagoda       0.90      0.90      0.90        10
+            panda       0.67      0.50      0.57         8
+           pigeon       0.06      0.56      0.10         9
+            pizza       0.38      0.27      0.32        11
+         platypus       0.00      0.00      0.00         7
+          pyramid       0.29      0.17      0.21        12
+         revolver       0.00      0.00      0.00        17
+            rhino       0.27      0.58      0.37        12
+          rooster       0.22      0.50      0.30        10
+        saxophone       0.50      0.25      0.33         8
+         schooner       0.32      0.46      0.38        13
+         scissors       0.46      0.75      0.57         8
+         scorpion       0.06      0.18      0.08        17
+        sea_horse       0.20      0.17      0.18        12
+           snoopy       0.12      1.00      0.22         7
+      soccer_ball       0.16      0.69      0.26        13
+          stapler       1.00      0.11      0.20         9
+         starfish       0.33      0.06      0.10        18
+      stegosaurus       0.20      0.25      0.22        12
+        stop_sign       0.82      0.69      0.75        13
+       strawberry       0.00      0.00      0.00         7
+        sunflower       0.33      0.12      0.17        17
+             tick       1.00      0.10      0.18        10
+        trilobite       1.00      0.50      0.67        18
+         umbrella       0.40      0.40      0.40        15
+            watch       0.73      0.56      0.64        48
+      water_lilly       0.00      0.00      0.00         8
+       wheelchair       0.00      0.00      0.00        12
+         wild_cat       0.00      0.00      0.00         7
+    windsor_chair       0.80      0.67      0.73        12
+           wrench       0.00      0.00      0.00         8
+         yin_yang       1.00      0.42      0.59        12
+
+         accuracy                           0.35      1777
+        macro avg       0.33      0.28      0.26      1777
+     weighted avg       0.48      0.35      0.36      1777
+
+
+Precyzja (weighted): 47.74% | (macro): 32.54%
+Recall (weighted): 34.67% | (macro): 28.28%
+F1-Score (weighted): 36.09% | (macro): 26.23%

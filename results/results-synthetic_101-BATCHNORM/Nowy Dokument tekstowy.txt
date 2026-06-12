@@ -1,0 +1,5 @@
+Train Acc: 0.84%
+Val Acc:   5.29%
+Top-1:     0.68%
+Top-5:     2.87%
+Spike rate:0.0000

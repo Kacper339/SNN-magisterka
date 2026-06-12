@@ -1,0 +1,125 @@
+class SimpleSNN(nn.Module): # Zmieniono nazwę klasy
+    def __init__(self, num_classes=101, T=15):
+        super().__init__()
+        self.T = T
+        spike_grad = surrogate.fast_sigmoid()
+
+        self.beta = 0.9
+
+        # Zmniejszone liczby filtrów w warstwach konwolucyjnych
+        self.conv1 = nn.Conv2d(2, 8, 3, padding=1) # Zmieniono z 16 na 8
+        self.bn1   = nn.BatchNorm2d(8) # Dostosuj BatchNorm
+        self.lif1  = snn.Leaky(beta=self.beta, spike_grad=spike_grad, threshold=2.0)
+        self.dropout1 = nn.Dropout2d(p=0.2) # Nadal p=0.4
+
+        self.pool1 = nn.MaxPool2d(2)
+
+        self.conv2 = nn.Conv2d(8, 16, 3, padding=1) # Zmieniono z 16 na 8, z 32 na 16
+        self.bn2   = nn.BatchNorm2d(16) # Dostosuj BatchNorm
+        self.lif2  = snn.Leaky(beta=self.beta, spike_grad=spike_grad, threshold=2.0)
+        self.dropout2 = nn.Dropout2d(p=0.2) # Nadal p=0.4
+        self.pool2 = nn.MaxPool2d(2)
+
+        self.conv3 = nn.Conv2d(16, 32, 3, padding=1) # Zmieniono z 32 na 16, z 64 na 32
+        self.bn3   = nn.BatchNorm2d(32) # Dostosuj BatchNorm
+        self.lif3  = snn.Leaky(beta=self.beta, spike_grad=spike_grad, threshold=2.0)
+        self.dropout3 = nn.Dropout2d(p=0.2) # Nadal p=0.4
+
+        self.conv4 = nn.Conv2d(32, 64, 3, padding=1) # Zmieniono z 64 na 32, z 128 na 64
+        self.bn4   = nn.BatchNorm2d(64) # Dostosuj BatchNorm
+        self.lif4  = snn.Leaky(beta=self.beta, spike_grad=spike_grad, threshold=2.0)
+        self.dropout4 = nn.Dropout2d(p=0.2) # Nadal p=0.4
+
+        self.conv5 = nn.Conv2d(64, 64, 3, padding=1) # Zmieniono z 128 na 64, z 128 na 64
+        self.bn5   = nn.BatchNorm2d(64) # Dostosuj BatchNorm
+        self.lif5  = snn.Leaky(beta=self.beta, spike_grad=spike_grad, threshold=2.0)
+        # Opcjonalnie: self.dropout5 = nn.Dropout2d(p=0.4) dla ostatniej warstwy
+
+        # Flatten + FC - trzeba też dostosować dummy input dla płaskiej warstwy
+        with torch.no_grad():
+            dummy = torch.zeros(1, 2, 180, 240)
+            x_test = dummy
+            x_test = self.bn1(self.conv1(x_test))
+            x_test, _ = self.lif1(x_test, self.lif1.init_leaky())
+            x_test = self.dropout1(x_test)
+            x_test = self.pool1(x_test)
+
+            x_test = self.bn2(self.conv2(x_test))
+            x_test, _ = self.lif2(x_test, self.lif2.init_leaky())
+            x_test = self.dropout2(x_test)
+            x_test = self.pool2(x_test)
+
+            x_test = self.bn3(self.conv3(x_test))
+            x_test, _ = self.lif3(x_test, self.lif3.init_leaky())
+            x_test = self.dropout3(x_test)
+
+            x_test = self.bn4(self.conv4(x_test))
+            x_test, _ = self.lif4(x_test, self.lif4.init_leaky())
+            x_test = self.dropout4(x_test)
+
+            x_test = self.bn5(self.conv5(x_test))
+            x_test, _ = self.lif5(x_test, self.lif5.init_leaky())
+
+            self.flat_dim = x_test.numel() # Automatycznie przeliczone
+
+        self.fc = nn.Linear(self.flat_dim, num_classes)
+
+    def forward(self, x):
+        mems = [self.lif1.init_leaky(), self.lif2.init_leaky(), self.lif3.init_leaky(),
+                self.lif4.init_leaky(), self.lif5.init_leaky()]
+
+        spike_sums = [0.0] * 5 # Suma spikowań dla każdej warstwy
+
+        # Liczba neuronów w każdej warstwie (dla obliczenia częstości spikowania na neuron)
+        # WAŻNE: PRZELICZONE DLA NOWEJ ARCHITEKTURY
+        num_neurons_lif1 = 8 * 180 * 240
+        num_neurons_lif2 = 16 * 90 * 120
+        num_neurons_lif3 = 32 * 45 * 60
+        num_neurons_lif4 = 64 * 45 * 60
+        num_neurons_lif5 = 64 * 45 * 60
+        neurons_per_layer = [num_neurons_lif1, num_neurons_lif2, num_neurons_lif3, num_neurons_lif4, num_neurons_lif5]
+
+        out_sum = 0
+
+        for t in range(self.T):
+            xt = x[..., t]
+
+            # Warstwa 1
+            cur1 = self.bn1(self.conv1(xt))
+            spk1, mems[0] = self.lif1(cur1, mems[0])
+            spike_sums[0] += spk1.sum().item() # Suma przed dropoutem
+            spk1_dropped = self.dropout1(spk1) # Zastosuj dropout na spikach
+            out1 = self.pool1(spk1_dropped) # Pooling na spikach po dropoutcie
+
+            # Warstwa 2
+            cur2 = self.bn2(self.conv2(out1))
+            spk2, mems[1] = self.lif2(cur2, mems[1])
+            spike_sums[1] += spk2.sum().item()
+            spk2_dropped = self.dropout2(spk2) # Zastosuj dropout na spikach
+            out2 = self.pool2(spk2_dropped)
+
+            # Warstwy 3, 4, 5
+            cur3 = self.bn3(self.conv3(out2))
+            spk3, mems[2] = self.lif3(cur3, mems[2])
+            spike_sums[2] += spk3.sum().item()
+            spk3_dropped = self.dropout3(spk3) # Zastosuj dropout na spikach
+
+            cur4 = self.bn4(self.conv4(spk3_dropped)) # Wejście do kolejnej warstwy to spiki po dropoutcie
+            spk4, mems[3] = self.lif4(cur4, mems[3])
+            spike_sums[3] += spk4.sum().item()
+            spk4_dropped = self.dropout4(spk4) # Zastosuj dropout na spikach
+
+            cur5 = self.bn5(self.conv5(spk4_dropped)) # Wejście do kolejnej warstwy to spiki po dropoutcie
+            spk5, mems[4] = self.lif5(cur5, mems[4])
+            # Jeśli dropout5 istnieje, zastosuj go tutaj: spk5_dropped = self.dropout5(spk5)
+            spike_sums[4] += spk5.sum().item()
+
+            # Wyjście
+            out_sum += self.fc(spk5.flatten(1)) # Wyjście z spk5 (nie z spk5_dropped jeśli ostatnia warstwa bez dropoutu)
+
+            if t % 5 == 0:
+                mems = [m.detach() for m in mems]
+
+        avg_firing_rates = [s / (self.T * x.size(0) * neurons_per_layer[i]) for i, s in enumerate(spike_sums)]
+
+        return out_sum / self.T, avg_firing_rates
